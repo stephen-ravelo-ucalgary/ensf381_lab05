@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Lab5 - Exercise 1</title>
+    </head>
+    <body>
+        <input type="text" id="textInput" placeholder="Enter a user number (1-30)"/>
+        <label id="textLabel"></label>
+        <button id="redButton">Red</button>
+        <button id="blueButton">Blue</button>
+        <button id="greenButton">Green</button>
+        <button id="orangeButton">Orange</button>
+        <button id="purpleButton">Purple</button>
+    </body>
+    <script type="text/javascript">
+        var textbox = document.getElementById("textInput");
+        var label = document.getElementById("textLabel");
+
+        textbox.addEventListener("keydown", async () => {
+            if(event.key == "Enter") {
+                const data = await retrieveData();
+                let foundUser = false;
+                data.forEach(user => {
+                    if(textbox.value == user.id) {
+                        label.textContent = `ID: ${user.id}, Name: ${user.first_name}, Group: ${user.user_group}`;
+                        foundUser = true;
+                    }
+                });
+                if(!foundUser) {
+                    label.textContent = "No users were found with the provided User_ID.";
+                }
+                textbox.value = '';
+            }
+        });
+
+        var redButton = document.getElementById("redButton");
+        var blueButton = document.getElementById("blueButton");
+        var greenButton = document.getElementById("greenButton");
+        var orangeButton = document.getElementById("orangeButton");
+        var purpleButton = document.getElementById("purpleButton");
+
+        redButton.addEventListener('click', () => {
+            label.style.color = "red";
+        });
+        blueButton.addEventListener('click', () => {
+            label.style.color = "blue";
+        });
+        greenButton.addEventListener('click', () => {
+            label.style.color = "green";
+        });
+        orangeButton.addEventListener('click', () => {
+            label.style.color = "orange";
+        });
+        purpleButton.addEventListener('click', () => {
+            label.style.color = "purple";
+        });
+
+        async function retrieveData() {
+            try {
+                const response = await fetch("https://67c1fbe861d8935867e4f87a.mockapi.io/users_api");
+                // parse response as JSON
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error("Error retrieving data:", error);
+            }
+        }
+    </script>
+</html>

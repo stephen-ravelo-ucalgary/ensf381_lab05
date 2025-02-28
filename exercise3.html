@@ -2,12 +2,11 @@
 <html>
 
 <head>
-    <title>Lab5 - Exercise 1</title>
+    <title>Lab5 - Exercise 3</title>
 </head>
 
 <body>
-    <input type="text" id="textInput" placeholder="Type something
-here..." />
+    <input type="text" id="textInput" placeholder="Enter a user number (1-30)" />
     <label id="textLabel"></label>
     <button id="redButton">Red</button>
     <button id="blueButton">Blue</button>
@@ -24,13 +23,23 @@ here..." />
     const orangeButton = document.getElementById("orangeButton");
     const purpleButton = document.getElementById("purpleButton");
 
-    textInput.addEventListener("keydown", (event) => {
+    textInput.addEventListener("keydown", async (event) => {
         if (event.key == "Enter") {
-            label.textContent = textInput.value;
+            const data = await retrieveData();
+            let personFound = false;
+            data.forEach(person => { 
+                if (person.id == textInput.value) { 
+                    label.textContent = `ID: ${person.id}, Name: ${person.first_name}, Group: ${person.user_group}`;
+                    personFound = true; 
+                }
+            });
+            if (!personFound) {
+                label.textContent = "No users were found with the provided User_ID.";
+            }
             textInput.value = null;
         }
     });
-
+    
     redButton.addEventListener("click", () => {
         label.style.color = "red";
     });
@@ -50,6 +59,17 @@ here..." />
     purpleButton.addEventListener("click", () => {
         label.style.color = "purple";
     });
+
+    async function retrieveData() {
+        try {
+            const response = await fetch("https://67c201cb61d8935867e51820.mockapi.io/users_api");
+            const data = await response.json();
+            return data;
+        }
+        catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
 </script>
 
 </html>
